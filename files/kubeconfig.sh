@@ -1,7 +1,7 @@
-ns=participant-<id> #update
-API_SERVER_URL="https://api.c-4e4de85.stage.kyma.ondemand.com"
+ns=default #update
+API_SERVER_URL="https://api.c-36d93b8.kyma.ondemand.com"
 
-SECRET_NAME=tutorial-service-account
+SECRET_NAME=docker-secret
 
 CA=$(kubectl get secret/${SECRET_NAME} -n $ns -o jsonpath='{.data.ca\.crt}')
 TOKEN=$(kubectl get secret/${SECRET_NAME} -n $ns -o jsonpath='{.data.token}' | base64 --decode)

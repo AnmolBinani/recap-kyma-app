@@ -1,0 +1,78 @@
+global:
+  domain: c-36d93b8.kyma.ondemand.com
+  imagePullSecret:
+    name: docker-secret
+srv:
+  bindings:
+    db:
+      serviceInstanceName: hana
+    auth:
+      serviceInstanceName: xsuaa
+  image:
+    repository: cap-dev.common.repositories.cloud.sap/anmol/bookshop-srv
+    tag: latest
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /
+    readiness:
+      path: /
+hana-deployer:
+  image:
+    repository: cap-dev.common.repositories.cloud.sap/anmol/bookshop-hana-deployer
+    tag: latest
+  bindings:
+    hana:
+      serviceInstanceName: hana
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1G
+    requests:
+      cpu: 1000m
+      memory: 1G
+hana:
+  serviceOfferingName: hana
+  servicePlanName: hdi-shared
+approuter:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+  image:
+    repository: cap-dev.common.repositories.cloud.sap/anmol/bookshop-approuter
+    tag: latest
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /
+    readiness:
+      path: /
+  envFrom:
+    - configMapRef:
+        name: "{{ .Release.Name }}-approuter-configmap"
+xsuaa:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    xsappname: bookshop
+    tenant-mode: dedicated
+    oauth2-configuration:
+      redirect-uris:
+        - https://*.c-36d93b8.kyma.ondemand.com/**
+backendDestinations:
+  srv-api:
+    service: srv
