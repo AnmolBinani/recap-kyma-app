@@ -1,5 +1,5 @@
 
-DOCKER_ACCOUNT=cap-dev.common.repositories.cloud.sap/anmol/recap
+DOCKER_ACCOUNT=cap-dev.common.repositories.cloud.sap/anmol
 
 build:
 	cds build --production
