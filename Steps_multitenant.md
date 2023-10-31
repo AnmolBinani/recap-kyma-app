@@ -1,13 +1,15 @@
-# 1. Prepare Kyma Namespace
+# Steps to follow
+
+## 1. Prepare Kyma Namespace
 
 ### Prerequisites
 
 - Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/)
 - `@sap/cds-dk` >= 7.0.1
 
-## Prepare your application for deployment
+### Prepare your application for deployment
 
-### Get kubeconfig:
+#### Get kubeconfig
 
 1. Open the subaccount and go to the Kyma Environment section.
 2. Click on `KubeconfigURL` to download the kubeconfig File.
@@ -21,12 +23,11 @@
 
     `export KUBECONFIG=<path-to-your-downloaded-file>`.
 
-### Prepare Kubernetes Namespace
+#### Prepare Kubernetes Namespace
 
-Change namespace to your own using: `kubectl config set-context --current --namespace=participant-<id>`
+Change namespace to your own using: `kubectl config set-context --current --namespace=default`
 
-#### Create container registry secret
-
+#### Create container registry secret-
 
 Create a secret `docker-secret` with credentials to access the container registry:
 
@@ -38,16 +39,17 @@ This will create a K8s secret, `docker-secret`, in your namespace.
 
 ---
 
-# 2. Containerizing a CAP Application
+## 2. Containerizing a CAP Application
 
-## Overview
+### Overview
 
 A CAP Application (single) usually has three modules:
+
 - Backend (srv)
 - DB Deployer
 - Frontend (Approuter or HTML5 App Deployer)
 
-## Docker login
+### Docker login
 
 Login to docker using the following command:
 
@@ -55,7 +57,7 @@ Login to docker using the following command:
 docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
 ```
 
-## Containerize
+### Containerize
 
 1. Create a Makefile in the root of your project.
 
@@ -90,25 +92,26 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
     ```
 
 2. Run the below mentioned command to build and push the images to your docker registry:
+
     ```bash
     make push-images
     ```
 
 ---
 
-# 3. Deploy to Kyma (Single Tenant)
+## 3. Deploy to Kyma (Single Tenant)
 
-## Consuming SAP HANA Cloud from the Kyma environment
+### Consuming SAP HANA Cloud from the Kyma environment
 
 Follow the process mentioned in the [blog_1](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and [blog_2](https://blogs.sap.com/2023/08/29/kymas-transition-to-modular-architecture/) to make the database accessible from Kyma environment.
 
-## Add Helm Chart
+### Add Helm Chart
 
 ```bash
 cds add helm
 ```
 
-## Configure Helm Chart
+### Configure Helm Chart
 
 Make the following changes in the _`chart/values.yaml`_ file.
 
@@ -121,6 +124,7 @@ Make the following changes in the _`chart/values.yaml`_ file.
     ```
 
     Result should be something like:
+
     ```bash
     *.<xyz123>.kyma.ondemand.com%
     ```
@@ -132,7 +136,7 @@ Make the following changes in the _`chart/values.yaml`_ file.
 3. Update image links for approuter, srv and db-deployer.
 
 4. Make the following change to add backend destinations required by Approuter.
-   
+
     ```diff
     -  backendDestinations: {}
     +  backendDestinations:
@@ -158,14 +162,13 @@ Make the following changes in the _`chart/values.yaml`_ file.
 
 ---
 
-
-# 4. Deploy to Kyma (Multitenant)
+## 4. Deploy to Kyma - Multitenant
 
 Multitenancy is the ability to serve multiple tenants through single clusters of microservice instances, while strictly isolating the tenants' data.
 In contrast to single-tenant mode, applications aren't serving end-user request immediately after deployment, but wait for tenants to subscribe.
 CAP has built-in support for multitenancy with the @sap/cds-mtxs package.
 
-## Make CAP Application Multitenant
+### Make CAP Application Multitenant
 
 Uninstall the single tenant version be executing the following command:
 
@@ -181,7 +184,7 @@ cds add mtx --for production
 
 `Note`: Make sure you install the newly added dependencies by executing `npm i`.
 
-## Changes to values.yaml
+### Changes to values.yaml
 
 1. Add the `mtx-api` destination in `backendDestinations` key:
 
@@ -196,6 +199,7 @@ cds add mtx --for production
 2. Update image link for sidecar.
 
 3. Run the below mentioned command to build and push the images to your docker registry:
+
     ```bash
     make push-images
     ```
@@ -206,7 +210,7 @@ cds add mtx --for production
     helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
     ```
 
-## Access
+### Access
 
 1. Open the subaccount and go to `Instances and Subscriptions` tab.
 2. Click on `Create`.
