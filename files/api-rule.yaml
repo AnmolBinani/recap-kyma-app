@@ -1,12 +1,12 @@
 apiVersion: gateway.kyma-project.io/v1beta1
 kind: APIRule
 metadata:
-  name: participant-<id> #update
+  name: bookshop #update
 spec:
   gateway: kyma-gateway.kyma-system.svc.cluster.local
-  host: <your-host> #update
+  host: bookshop-approuter-default #update
   service:
-    name: bookshop-<id>-approuter #update
+    name: bookshop-approuter #update
     port: 8080
   rules:
   - accessStrategies:

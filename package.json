@@ -1,34 +1,39 @@
 {
-    "name": "@capire/bookshop",
-    "version": "1.0.0",
-    "description": "A simple self-contained bookshop service.",
-    "files": [
-        "app",
-        "srv",
-        "db",
-        "index.cds",
-        "index.js"
-    ],
-    "devDependencies": {
-        "@cap-js/sqlite": "*"
+  "name": "@capire/bookshop",
+  "version": "1.0.0",
+  "description": "A simple self-contained bookshop service.",
+  "files": [
+    "app",
+    "srv",
+    "db",
+    "index.cds",
+    "index.js"
+  ],
+  "devDependencies": {
+    "@cap-js/sqlite": "*"
+  },
+  "dependencies": {
+    "@sap/cds": "^7.3.1",
+    "@sap/cds-hana": "^2",
+    "@sap/cds-mtxs": "^1.9",
+    "@sap/xssec": "^3",
+    "express": "^4.17.1",
+    "passport": "^0"
+  },
+  "scripts": {
+    "genres": "cds serve test/genres.cds",
+    "start": "cds-serve"
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa",
+        "db": "hana",
+        "multitenancy": true,
+        "toggles": true,
+        "extensibility": true
+      }
     },
-    "dependencies": {
-        "@sap/cds": "^7.3.1",
-        "express": "^4.17.1",
-        "passport": "^0",
-        "@sap/xssec": "^3",
-        "@sap/cds-hana": "^2"
-    },
-    "scripts": {
-        "genres": "cds serve test/genres.cds",
-        "start": "cds-serve"
-    },
-    "cds": {
-        "requires": {
-            "[production]": {
-                "auth": "xsuaa",
-                "db": "hana"
-            }
-        }
-    }
+    "profile": "with-mtx-sidecar"
+  }
 }

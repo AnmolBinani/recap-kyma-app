@@ -10,15 +10,18 @@ dependencies:
   - name: web-application
     alias: srv
     version: ">0.0.0"
-  - name: content-deployment
-    alias: hana-deployer
-    version: ">0.0.0"
-  - name: service-instance
-    alias: hana
-    version: ">0.0.0"
   - name: service-instance
     alias: xsuaa
     version: ">0.0.0"
   - name: web-application
     alias: approuter
+    version: ">0.0.0"
+  - name: web-application
+    alias: sidecar
+    version: ">0.0.0"
+  - name: service-instance
+    alias: saas-registry
+    version: ">0.0.0"
+  - name: service-instance
+    alias: service-manager
     version: ">0.0.0"

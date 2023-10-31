@@ -20,17 +20,11 @@ YdI7pCHUWTGs2i84WYmoTw== templates/_deployment_helpers.tpl
 X3C8EwZ/xSxmaK5vx0PX6w== values.root.schema.json
 MnvjPDK1hgCyViS2OxY7kQ== templates/_helpers.tpl
 undefined 
-LM5wxVPCRRVFGSWqIOGF3w== charts/content-deployment/Chart.yaml
-uwyxAkWEW2WfM3sjITkxeg== charts/content-deployment/values.yaml
-xNXyBIRBf2qT5TqjEj2fNw== charts/content-deployment/values.schema.json
-NGKf/ruA2JjaZ2mnGHWNTQ== charts/content-deployment/templates/secret.yaml
-eE++SMGFnx9YadggzfQyJw== charts/content-deployment/templates/job.yaml
-kMg0P40D0itEUrQD5Sa+Uw== charts/content-deployment/templates/service-account.yaml
-zyxTKYZCtMVDY6WlgexlEg== charts/content-deployment/templates/_helpers.tpl
-A3+DCFgo4lrVRO9vDSGVjg== charts/content-deployment/templates/service-binding.yaml
 e3wxPLuTPKGlr09vjzAxIw== charts/service-instance/Chart.yaml
 Qkq883cyX48J+seKl5KCJA== charts/service-instance/values.schema.json
 gApOzPGX3pQOFrVF/HQg6g== charts/service-instance/values.yaml
 5eWpPemx6Xj2cpMRNPpyPw== charts/service-instance/templates/_helpers.tpl
 k3vAghU1CUyeR9zvSXrYBQ== charts/service-instance/templates/serviceinstance.yaml
-ujQUCmMsMgKimBQyDb274w== templates/approuter-configmap.yaml
+ovKx0cNjyBoHL5IiOFhwjQ== templates/approuter-configmap.yaml
+hLjYRgA4zuw95Z5FlpwvoQ== templates/mtxs-configmap.yaml
+QiRtMv18+isCHI5ooGHRvw== templates/saas-registry-secret.yaml

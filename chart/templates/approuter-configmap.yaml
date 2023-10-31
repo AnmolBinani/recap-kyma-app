@@ -1,7 +1,12 @@
 # Please do not modify this file. This file may be overwritten.
 
+{{- $deployment := .Values.approuter }}
+{{- $ := merge (dict "name" "approuter" "deployment" $deployment) . }}
+{{- $approuterUrl := (include "cap.deploymentHostFull" $ )}}
+
+
 {{- $defaultParameters :=  dict "forwardAuthToken" true }}
-{{- $ := dict "root" . "defaultParameters" $defaultParameters }}
+{{- $destinations := dict "root" . "defaultParameters" $defaultParameters }}
 
 apiVersion: v1
 kind: ConfigMap
@@ -10,4 +15,5 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
 data:
   destinations: >
-    {{ include "cap.backendDestinations" $ }}
+    {{ include "cap.backendDestinations" $destinations }}
+  TENANT_HOST_PATTERN: {{ printf "^(.*)-%s" $approuterUrl }}
