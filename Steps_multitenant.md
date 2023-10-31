@@ -1,65 +1,48 @@
 # Steps to follow
 
-## 1. Prepare Kyma Namespace
+## 1. Deploy to Kyma - Multitenant
 
-### Prerequisites
+Multitenancy is the ability to serve multiple tenants through single clusters of microservice instances, while strictly isolating the tenants' data.
+In contrast to single-tenant mode, applications aren't serving end-user request immediately after deployment, but wait for tenants to subscribe.
+CAP has built-in support for multitenancy with the @sap/cds-mtxs package.
 
-- Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/)
-- `@sap/cds-dk` >= 7.0.1
+### Make CAP Application Multitenant
 
-### Prepare your application for deployment
-
-#### Get kubeconfig
-
-1. Open the subaccount and go to the Kyma Environment section.
-2. Click on `KubeconfigURL` to download the kubeconfig File.
-3. Export the kubeconfig using the command:
-
-    Windows:
-
-    `set KUBECONFIG=<path-to-your-downloaded-file>`.
-
-    macOS:
-
-    `export KUBECONFIG=<path-to-your-downloaded-file>`.
-
-#### Prepare Kubernetes Namespace
-
-Change namespace to your own using: `kubectl config set-context --current --namespace=default`
-
-#### Create container registry secret-
-
-Create a secret `docker-secret` with credentials to access the container registry:
+Uninstall the single tenant version be executing the following command:
 
 ```bash
-kubectl create secret docker-registry docker-secret --docker-username=$USERNAME --docker-password=$API_KEY --docker-server=$YOUR_CONTAINER_REGISTRY 
+helm uninstall bookshop
 ```
 
-This will create a K8s secret, `docker-secret`, in your namespace.
+Execute the following command to make the app multitenant:
+
+```bash
+cds add mtx --for production
+```
+
+`Note`: Make sure you install the newly added dependencies by executing `npm i`.
 
 ---
 
-## 2. Containerizing a CAP Application
+### Changes to values.yaml
 
-### Overview
+1. Add the `mtx-api` destination in `backendDestinations` key:
 
-A CAP Application (single) usually has three modules:
+    ```diff
+    backendDestinations:
+        srv-api:
+            service: srv
+    +   mtx-api:
+    +       service: sidecar
+    ```
 
-- Backend (srv)
-- DB Deployer
-- Frontend (Approuter or HTML5 App Deployer)
+2. Update image link for sidecar.
 
-### Docker login
-
-Login to docker using the following command:
-
-```bash
-docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
-```
+---
 
 ### Containerize
 
-1. Create a Makefile in the root of your project.
+1. Update the Makefile in the root of your project.
 
     ```make
     # Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry
@@ -97,55 +80,13 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
     make push-images
     ```
 
----
-
-## 4. Deploy to Kyma - Multitenant
-
-Multitenancy is the ability to serve multiple tenants through single clusters of microservice instances, while strictly isolating the tenants' data.
-In contrast to single-tenant mode, applications aren't serving end-user request immediately after deployment, but wait for tenants to subscribe.
-CAP has built-in support for multitenancy with the @sap/cds-mtxs package.
-
-### Make CAP Application Multitenant
-
-Uninstall the single tenant version be executing the following command:
-
-```bash
-helm uninstall bookshop
-```
-
-Execute the following command to make the app multitenant:
-
-```bash
-cds add mtx --for production
-```
-
-`Note`: Make sure you install the newly added dependencies by executing `npm i`.
-
-### Changes to values.yaml
-
-1. Add the `mtx-api` destination in `backendDestinations` key:
-
-    ```diff
-    backendDestinations:
-        srv-api:
-            service: srv
-    +   mtx-api:
-    +       service: sidecar
-    ```
-
-2. Update image link for sidecar.
-
-3. Run the below mentioned command to build and push the images to your docker registry:
-
-    ```bash
-    make push-images
-    ```
-
-4. Install the helm chart with the following command:
+3. Install the helm chart with the following command:
 
     ```bash
     helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
     ```
+
+---
 
 ### Access
 
