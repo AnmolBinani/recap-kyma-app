@@ -83,7 +83,7 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
         docker tag bookshop-approuter:latest $(DOCKER_ACCOUNT)/bookshop-approuter:latest
 
     # Push container images
-    push-images: build build-dbimage build-srv build-uiimage
+    push-images: build build-sidecar build-srv build-uiimage
         docker push $(DOCKER_ACCOUNT)/bookshop-sidecar:latest
         docker push $(DOCKER_ACCOUNT)/bookshop-srv:latest
         docker push $(DOCKER_ACCOUNT)/bookshop-approuter:latest
@@ -97,6 +97,10 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
 ---
 
 # 3. Deploy to Kyma (Single Tenant)
+
+## Consuming SAP HANA Cloud from the Kyma environment
+
+Follow the process mentioned in the [blog_1](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and [blog_2](https://blogs.sap.com/2023/08/29/kymas-transition-to-modular-architecture/) to make the database accessible from Kyma environment.
 
 ## Add Helm Chart
 
@@ -125,7 +129,7 @@ Make the following changes in the _`chart/values.yaml`_ file.
 
 2. Replace `<your-cluster-domain>` in `xsuaa.parameters.oauth2-configuration.redirect-uris` with your cluster domain.
 
-3. Update image links for approuter,srv and db-deployer.
+3. Update image links for approuter, srv and db-deployer.
 
 4. Make the following change to add backend destinations required by Approuter.
    
@@ -191,6 +195,16 @@ cds add mtx --for production
 
 2. Update image link for sidecar.
 
+3. Run the below mentioned command to build and push the images to your docker registry:
+    ```bash
+    make push-images
+    ```
+
+4. Install the helm chart with the following command:
+
+    ```bash
+    helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
+    ```
 
 ## Access
 
@@ -203,6 +217,6 @@ cds add mtx --for production
 7. Configure your host and release name in the `api-rule.yaml` file available in the `files` folder of your fork.
 8. Apply it using the following command `kubectl apply -f files/api-rule.yaml`.
 9. Open the web address.
-
+10. Repeat the same steps from 1-9 for other tenants (different subaccount). Make sure to add unique `metadata.name` (release name) in step 7.
 
 ---
