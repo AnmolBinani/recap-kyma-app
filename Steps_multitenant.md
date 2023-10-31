@@ -36,7 +36,11 @@ cds add mtx --for production
     +       service: sidecar
     ```
 
-2. Update image link for sidecar.
+2. Update image link for sidecar. Replace the `$YOUR_CONTAINER_REGISTRY` with the correct value.
+
+    ```yaml
+      approuter.image.repository: $YOUR_CONTAINER_REGISTRY/bookshop-approuter
+    ```
 
 ---
 
