@@ -69,10 +69,10 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
     build:
         cds build --production
 
-    # Build sidecar image
-    build-sidecar:
-	    pack build bookshop-sidecar --path gen/mtx/sidecar --buildpack gcr.io/paketo-buildpacks/nodejs --builder paketobuildpacks/builder:base --env BP_NODE_RUN_SCRIPTS=""
-	    docker tag bookshop-sidecar:latest $(DOCKER_ACCOUNT)/bookshop-sidecar:latest
+    # Build db-image
+    build-dbimage:
+	pack build bookshop-hana-deployer --path gen/db --buildpack gcr.io/paketo-buildpacks/nodejs --builder paketobuildpacks/builder:base --env BP_NODE_RUN_SCRIPTS=""
+	docker tag bookshop-hana-deployer:latest $(DOCKER_ACCOUNT)/bookshop-hana-deployer:latest
 
     # Build image for CAP service
     build-srv:
@@ -85,8 +85,8 @@ docker login -u "$USERNAME" -p "$API_KEY" $YOUR_CONTAINER_REGISTRY
         docker tag bookshop-approuter:latest $(DOCKER_ACCOUNT)/bookshop-approuter:latest
 
     # Push container images
-    push-images: build build-sidecar build-srv build-uiimage
-        docker push $(DOCKER_ACCOUNT)/bookshop-sidecar:latest
+    push-images: build build-dbimage build-srv build-uiimage
+        docker push $(DOCKER_ACCOUNT)/bookshop-hana-deployer:latest
         docker push $(DOCKER_ACCOUNT)/bookshop-srv:latest
         docker push $(DOCKER_ACCOUNT)/bookshop-approuter:latest
     ```
