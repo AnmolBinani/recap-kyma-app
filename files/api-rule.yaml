@@ -5,8 +5,8 @@ metadata:
   # name: bookshop-1 #update
 spec:
   gateway: kyma-gateway.kyma-system.svc.cluster.local
-  host: 715ab873trial-bookshop-approuter-default #update
-  # host: trial-1-g79zgtcn-bookshop-approuter-default #update
+  host: 715ab873trial-bookshop-approuter-multi-tenant #update
+  # host: trial-1-g79zgtcn-bookshop-approuter-multi-tenant #update
   service:
     name: bookshop-approuter #update
     port: 8080
