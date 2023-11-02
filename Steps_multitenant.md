@@ -6,6 +6,10 @@ Multitenancy is the ability to serve multiple tenants through single clusters of
 In contrast to single-tenant mode, applications aren't serving end-user request immediately after deployment, but wait for tenants to subscribe.
 CAP has built-in support for multitenancy with the @sap/cds-mtxs package.
 
+**#### Prepare Kubernetes Namespace**
+
+Change namespace to your own using: `kubectl config set-context --current --namespace=multi-tenant`
+
 ### Make CAP Application Multitenant
 
 Uninstall the single tenant version be executing the following command:
@@ -21,10 +25,6 @@ cds add mtx --for production
 ```
 
 `Note`: Make sure you install the newly added dependencies by executing `npm i`.
-
-#### Prepare Kubernetes Namespace
-
-Change namespace to your own using: `kubectl config set-context --current --namespace=multi-tenant`
 
 ---
 
