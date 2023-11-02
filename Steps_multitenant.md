@@ -22,6 +22,10 @@ cds add mtx --for production
 
 `Note`: Make sure you install the newly added dependencies by executing `npm i`.
 
+#### Prepare Kubernetes Namespace
+
+Change namespace to your own using: `kubectl config set-context --current --namespace=multi-tenant`
+
 ---
 
 ### Changes to values.yaml
