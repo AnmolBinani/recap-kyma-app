@@ -25,7 +25,7 @@
 
 #### Prepare Kubernetes Namespace
 
-Change namespace to your own using: `kubectl config set-context --current --namespace=default`
+Change namespace to your own using: `kubectl config set-context --current --namespace=single-tenant`
 
 #### Create container registry secret-
 
